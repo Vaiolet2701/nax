@@ -1,0 +1,126 @@
+.all-materials-page {
+    background-color: #101010;
+    color: #d0d0d0;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.all-materials-page h1, 
+.all-materials-page h2, 
+.all-materials-page h3 {
+    color: #43d177;
+}
+
+/* Фильтр по категориям */
+#categoryFilter {
+    background-color: #1a1a1a;
+    border: 1px solid #2b2b2b;
+    color: #d0d0d0;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    transition: border-color 0.3s ease;
+    max-width: 300px;
+}
+
+#categoryFilter:hover, #categoryFilter:focus {
+    border-color: #43d177;
+    outline: none;
+}
+
+/* Карточки */
+.material-card {
+    background-color: #1a1a1a;
+    border: 1px solid #2b2b2b;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 255, 127, 0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.material-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 255, 127, 0.1);
+}
+
+.material-card .card-title {
+    color: #6ee7b7;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.material-card .card-text,
+.material-card .text-muted {
+    color: #bbb;
+    font-size: 0.95rem;
+}
+
+.material-card img {
+    border-radius: 8px;
+    max-height: 300px;
+    object-fit: cover;
+    width: 100%;
+    border: 1px solid #2f2f2f;
+}
+
+/* Видео */
+.material-card iframe {
+    border-radius: 8px;
+    border: 1px solid #2d2d2d;
+    box-shadow: 0 2px 10px rgba(0, 255, 127, 0.1);
+}
+
+/* Сетка адаптив */
+@media (max-width: 767.98px) {
+    .col-md-6 {
+        width: 100%;
+    }
+}
+/* Модальное окно - стиль */
+/* Сделать модалку почти на весь экран */
+.modal-dialog.modal-lg {
+    max-width: 95vw;
+    height: 95vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0; /* убираем возможные внутренние отступы */
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2b2b2b;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal-header,
+.modal-footer {
+    background-color: #151515;
+    border-bottom: 1px solid #2c2c2c;
+    color: #43d177;
+    padding: 1rem 1.5rem;
+}
+
+.modal-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    background-color: #121212;
+    color: #d0d0d0;
+    padding: 1.5rem;
+}
+
+#modalImage {
+    max-width: 100%;
+    height: 300px; /* фиксированная высота */
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 1rem auto; /* центрирует по горизонтали + отступ сверху и снизу */
+    border: 1px solid #2f2f2f;
+    display: block;
+}

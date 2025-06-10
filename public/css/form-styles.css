@@ -1,0 +1,97 @@
+/* Общие стили формы */
+form {
+    background-color: #14231c;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #1f3b2b;
+    color: #e1ffe1;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Заголовки */
+  form h3 {
+    margin-bottom: 10px;
+    color: #00ff66;
+    font-size: 22px;
+  }
+  
+  /* Мелкий текст */
+  .text-muted {
+    color: #88a9a0;
+    font-size: 14px;
+  }
+  
+  /* Поля ввода */
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="tel"],
+  form input[type="number"],
+  form textarea,
+  form select {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: #0a100d;
+    border: 1px solid #2e4d3a;
+    border-radius: 8px;
+    color: #e1ffe1;
+    font-size: 16px;
+    margin-top: 6px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  form input:focus,
+  form textarea:focus,
+  form select:focus {
+    outline: none;
+    border-color: #00ff66;
+    box-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
+  }
+  
+  /* Метки */
+  form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  
+  /* Обёртки полей */
+  .mb-3, .mb-4 {
+    margin-bottom: 20px;
+  }
+  
+  /* Сообщения (alert) */
+  .alert {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #3e3e3e;
+    border-left: 4px solid #ffc107;
+    color: #fff1cc;
+  }
+  
+  .alert-warning {
+    background-color: #443d2f;
+    border-color: #ffc107;
+  }
+  
+  /* Кнопка отправки */
+  form button[type="submit"] {
+    background-color: #00ff66;
+    border: none;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #14231c;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  form button[type="submit"]:hover {
+    background-color: #00cc55;
+    transform: translateY(-2px);
+  }
+ 

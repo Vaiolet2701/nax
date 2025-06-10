@@ -1,0 +1,99 @@
+.about-page {
+    background-color: #101010; /* тёмно-серый фон */
+    font-family: 'Segoe UI', sans-serif;
+    color: #d0d0d0;
+}
+
+.about-section {
+    background-color: #1a1a1a; /* почти чёрный блок */
+    border-left: 6px solid #28a745; /* зелёная полоса */
+    padding: 2rem 2rem 1.5rem;
+    margin-bottom: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.3s ease;
+}
+
+.about-section:hover {
+    box-shadow: 0 12px 24px rgba(0, 255, 127, 0.15);
+}
+
+.about-section h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #43d177; /* светло-зелёный */
+    margin-bottom: 1rem;
+}
+
+.about-section p,
+.about-section li {
+    font-size: 1rem;
+    color: #ccc; /* светло-серый текст */
+    line-height: 1.6;
+}
+
+.about-section ul,
+.about-section ol {
+    padding-left: 1.2rem;
+}
+
+.about-section ul li,
+.about-section ol li {
+    margin-bottom: 0.5rem;
+}
+
+.about-section table {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 255, 127, 0.1);
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.about-section table thead {
+    background-color: #14532d; /* тёмно-зелёный */
+    color: #aaffcc; /* светло-зелёный текст */
+    font-weight: bold;
+}
+
+.about-section table th,
+.about-section table td {
+    padding: 1rem;
+    border: none;
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    background-color: #1e1e1e;
+}
+
+.about-section table tbody tr:nth-child(odd) {
+    background-color: #232923;
+}
+
+.about-section table tbody tr:nth-child(even) {
+    background-color: #1c1f1c;
+}
+
+.about-section table tbody td:first-child {
+    font-weight: 600;
+    color: #58c77c;
+}
+
+.about-section .alert-info {
+    background-color: #111;
+    color: #8cffc1;
+    border: 1px solid #28a745;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.list-group-numbered > li {
+    list-style-type: decimal;
+    margin-left: 1.25rem;
+    background-color: transparent;
+    border: none;
+    padding-left: 0;
+    font-size: 1rem;
+    color: #ccc;
+}
