@@ -36,13 +36,15 @@
                         <input type="text" name="address" id="address" class="form-control" 
                                value="{{ old('address', $user->address) }}">
                     </div>
-                
                     <div class="form-group">
                         <label>Уровень:</label>
                         <input type="text" class="form-control" 
-                               value="{{ ucfirst($user->laravel_level) }}">
+                            value="{{ ucfirst($user->laravel_level) }}"
+                            readonly
+                            onselectstart="return false"
+                            onmousedown="return false"
+                            style="background-color: #222; color: #ccc; user-select: none;">
                     </div>
-               
                     @if($user->canHaveProfileFields())
                         <div class="form-group">
                             <label>Возраст</label>
@@ -69,6 +71,52 @@
         
         @if($user->role === 'user')
             <div class="mt-5">
+                <!-- Результаты теста выживания -->
+                <section class="section-block mt-5">
+                    <h2>Результаты теста выживания</h2>
+                    
+                    @if($survivalTestResults->count() > 0)
+                        <div class="card-grid" id="testResultsGrid">
+                            @foreach($survivalTestResults ?? [] as $index => $result)
+                                <div class="card test-result-card {{ $index >= 3 ? 'd-none' : '' }}">
+                                    <div class="card-header bg-dark">
+                                        <h5 class="mb-0">Тест от {{ $result->created_at->format('d.m.Y') }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar bg-{{ $result->percentage >= 80 ? 'success' : ($result->percentage >= 50 ? 'warning' : 'danger') }}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ $result->percentage }}%" 
+                                                 aria-valuenow="{{ $result->percentage }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                                {{ $result->percentage }}%
+                                            </div>
+                                        </div>
+                                        <p class="mb-1"><strong>Баллы:</strong> {{ $result->score }}/{{ $result->total_questions }}</p>
+                                        <p class="mb-1"><strong>Результат:</strong> 
+                                            <span class="badge badge-{{ $result->percentage >= 80 ? 'success' : ($result->percentage >= 50 ? 'warning' : 'danger') }}">
+                                                {{ $result->percentage >= 80 ? 'Отлично' : ($result->percentage >= 50 ? 'Удовлетворительно' : 'Неудовлетворительно') }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        @if(($survivalTestResults->count() ?? 0) > 3)
+                            <button class="btn btn-link expand-btn" data-target="testResultsGrid">Показать все</button>
+                        @endif
+                    @else
+                        <div class="alert alert-info">
+                            Вы еще не проходили тест выживания.
+                        </div>
+                    @endif
+                    
+                    <a href="{{ route('survival.test') }}" class="btn btn-primary mt-3">
+                        Пройти тест выживания
+                    </a>
+                </section>
 
                 <!-- Завершённые курсы -->
                 <section class="section-block">
@@ -81,39 +129,67 @@
                                 <p class="text-muted">
                                     Завершен: {{ \Carbon\Carbon::parse($course->pivot->completed_at)->format('d.m.Y') }}
                                 </p>
-
+                                
                                 <!-- Кнопка для показа формы -->
-                                <button class="btn btn-outline-success mb-2" type="button" onclick="toggleReviewForm({{ $course->id }})">
-                                    Оставить отзыв
+                                <button class="btn btn-outline-success mb-2" type="button" 
+                                        onclick="toggleReviewForm({{ $course->id }})">
+                                    {{ $course->reviews()->where('user_id', auth()->id())->exists() ? 'Изменить отзыв' : 'Оставить отзыв' }}
                                 </button>
-
-                                <!-- Скрытая форма отзыва -->
-                                <div id="review-form-{{ $course->id }}" class="review-form bg-dark text-white border p-3 rounded d-none">
+                            </div>
+                            
+                            <!-- Форма отзыва (под карточкой) -->
+                            <div id="review-form-container-{{ $course->id }}" class="col-12 d-none">
+                                <div class="review-form bg-dark text-white border p-3 rounded mb-4">
+                                    @if($course->reviews()->where('user_id', auth()->id())->exists())
+                                        <div class="alert alert-info mb-3">
+                                            Вы уже оставляли отзыв на этот курс. Отправка формы обновит ваш отзыв.
+                                        </div>
+                                    @endif
+                                    
                                     <form action="{{ route('course-reviews.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="course_id" value="{{ $course->id }}">
-                                        <div class="mb-2">
-                                            <label for="title_{{ $course->id }}">Заголовок отзыва</label>
-                                            <input type="text" name="title" id="title_{{ $course->id }}" class="form-control" required>
+                                        
+                                        <div class="mb-3">
+                                            <label for="title_{{ $course->id }}" class="form-label">Заголовок отзыва *</label>
+                                            <input type="text" name="title" id="title_{{ $course->id }}" class="form-control" 
+                                                   value="{{ optional($course->reviews()->where('user_id', auth()->id())->first())->title }}" required>
                                         </div>
-                                        <div class="mb-2">
-                                            <label for="content_{{ $course->id }}">Текст отзыва</label>
-                                            <textarea name="content" id="content_{{ $course->id }}" class="form-control" rows="3" required></textarea>
+                                        
+                                        <div class="mb-3">
+                                            <label for="content_{{ $course->id }}" class="form-label">Текст отзыва *</label>
+                                            <textarea name="content" id="content_{{ $course->id }}" class="form-control" rows="5" required>
+                                                {{ optional($course->reviews()->where('user_id', auth()->id())->first())->content }}
+                                            </textarea>
                                         </div>
-                                        <div class="mb-2">
-                                            <label for="rating_{{ $course->id }}">Оценка</label>
-                                            <select name="rating" id="rating_{{ $course->id }}" class="form-control" required>
-                                                @for($i = 5; $i >= 1; $i--)
-                                                    <option value="{{ $i }}">{{ $i }} ★</option>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Оценка *</label>
+                                            <div class="rating-input">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <input type="radio" id="star{{ $i }}_{{ $course->id }}" name="rating" 
+                                                           value="{{ $i }}" 
+                                                           {{ optional($course->reviews()->where('user_id', auth()->id())->first())->rating == $i ? 'checked' : '' }}>
+                                                    <label for="star{{ $i }}_{{ $course->id }}">★</label>
                                                 @endfor
-                                            </select>
+                                            </div>
                                         </div>
-                                        <button type="submit" class="btn btn-success">Отправить</button>
+                                        
+                                        <div class="d-flex justify-content-between">
+                                            <button type="submit" class="btn btn-success">
+                                                {{ $course->reviews()->where('user_id', auth()->id())->exists() ? 'Обновить отзыв' : 'Отправить отзыв' }}
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary" 
+                                                    onclick="toggleReviewForm({{ $course->id }})">
+                                                Отмена
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         @endforeach
                     </div>
+                    
                     @if(($completedCourses->count() ?? 0) > 6)
                         <button class="btn btn-link expand-btn" data-target="completedCoursesGrid">Показать все</button>
                     @endif
@@ -185,10 +261,106 @@
                     @endif
                 </section>
 
+                @if($user->role === 'user')
+                    <!-- Секция походов -->
+                    <section class="section-block mt-5">
+                        <h2>@if($is_advanced)Походы на модерации@elseМои походы@endif</h2>
+                        
+                        @if($is_advanced)
+                            <!-- Для продвинутого пользователя -->
+                           <div class="card-grid">
+    @foreach($hikes_for_review as $hike)
+        @foreach($hike->participants as $participant)
+            <div class="card hike-card mb-4">
+                <!-- Информация о походе -->
+                <div class="card-header bg-light">
+                    <h5>{{ $hike->title }}</h5>
+                    <p class="mb-1">{{ Str::limit($hike->description, 80) }}</p>
+                    <small class="text-muted">
+                        Дата: {{ $hike->start_date?->format('d.m.Y') }} - {{ $hike->end_date?->format('d.m.Y') }}
+                    </small>
+                </div>
+                
+                <!-- Данные участника -->
+                <div class="card-body">
+                    <div class="participant-info">
+                        <h6 class="text-primary">Данные участника:</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Имя:</strong> {{ $participant->name }}</p>
+                                <p><strong>Возраст:</strong> {{ $participant->age }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Телефон:</strong> {{ $participant->phone }}</p>
+                                <p><strong>Статус:</strong> 
+                                    <span class="badge bg-{{ 
+                                        $participant->status === 'approved' ? 'success' : 
+                                        ($participant->status === 'rejected' ? 'danger' : 'warning') 
+                                    }}">
+                                        {{ $participant->status === 'approved' ? 'Одобрено' : 
+                                           ($participant->status === 'rejected' ? 'Отклонено' : 'На рассмотрении') }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        @if($participant->notes)
+                            <div class="notes-section mt-2">
+                                <p class="mb-1"><strong>Примечания:</strong></p>
+                                <p class="text-muted small">{{ $participant->notes }}</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                
+                <!-- Кнопки управления -->
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between">
+                        <form action="{{ route('trips.approve', ['hike' => $hike->id, 'participant' => $participant->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i> Одобрить
+                            </button>
+                        </form>
+                        
+                        <form action="{{ route('trips.reject', ['hike' => $hike->id, 'participant' => $participant->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times"></i> Отклонить
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-
-
+        @endforeach
+    @endforeach
+</div>
+                        @else
+                            <!-- Для обычных пользователей -->
+                            <div class="card-grid">
+                                @foreach($user_hikes as $hike)
+                                    <div class="card hike-card">
+                                        <h5>{{ $hike->title }}</h5>
+                                        <p>{{ Str::limit($hike->description, 100) }}</p>
+                                        <p class="text-{{ 
+                                            $hike->status === 'approved' ? 'success' : 
+                                            ($hike->status === 'rejected' ? 'danger' : 'warning') 
+                                        }}">
+                                            Статус: {{ 
+                                                $hike->status === 'approved' ? 'Одобрено' : 
+                                                ($hike->status === 'rejected' ? 'Отклонено' : 'На рассмотрении') 
+                                            }}
+                                        </p>
+                                        <p class="text-muted">
+                                            Дата: {{ $hike->start_date ? $hike->start_date->format('d.m.Y') : '' }} - 
+                                                 {{ $hike->end_date ? $hike->end_date->format('d.m.Y') : '' }}
+                                        </p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </section>
+                @endif
+            </div>
         @elseif($user->role === 'teacher')
             <!-- Курсы преподавателя -->
             <div class="mt-5">
@@ -213,6 +385,7 @@
         @endif
     </div>
 </div>
+
 <!-- Модальное окно для подробностей -->
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -279,14 +452,45 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>
-    function toggleReviewForm(courseId) {
-        const form = document.getElementById('review-form-' + courseId);
-        if (form.classList.contains('d-none')) {
-            form.classList.remove('d-none');
-        } else {
-            form.classList.add('d-none');
-        }
+   function toggleReviewForm(courseId) {
+    const formContainer = document.getElementById(`review-form-container-${courseId}`);
+    const button = document.querySelector(`.course-card button[onclick="toggleReviewForm(${courseId})"]`);
+    
+    if (formContainer.classList.contains('d-none')) {
+        formContainer.classList.remove('d-none');
+        button.textContent = 'Скрыть форму';
+        formContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        formContainer.classList.add('d-none');
+        button.textContent = button.textContent.includes('Изменить') ? 'Изменить отзыв' : 'Оставить отзыв';
     }
+}
+
+// Обработчик для кнопок "Показать все"
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.expand-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const container = document.getElementById(targetId);
+            if (!container) return;
+
+            const hiddenCards = container.querySelectorAll('.d-none');
+            
+            if (hiddenCards.length > 0) {
+                hiddenCards.forEach(card => card.classList.remove('d-none'));
+                button.textContent = 'Свернуть';
+            } else {
+                const showCount = targetId === 'articlesGrid' ? 3 : 
+                                 targetId === 'testResultsGrid' ? 3 : 6;
+                const cards = container.querySelectorAll('.card');
+                cards.forEach((card, index) => {
+                    card.classList.toggle('d-none', index >= showCount);
+                });
+                button.textContent = 'Показать все';
+            }
+        });
+    });
+});
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -318,5 +522,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
 </script>
+@endpush

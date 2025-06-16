@@ -1,22 +1,40 @@
-/* Общий стиль для кнопки фильтрации и селекта сортировки */
-.custom-filter-btn,
-.custom-filter-select {
-  background-color: #2d8659;
-  color: #f5f5e9;
-  border: 1px solid #1f3b2b;
-  border-radius: 8px;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  min-height: 45px;
-  transition: background-color 0.3s ease;
+
+
+.custom-filter-btn:hover {
+    background-color: #28a745;
+    color: #fff;
 }
 
-.custom-filter-btn:hover,
-.custom-filter-select:hover {
-  background-color: #256f49;
-  color: #ffffff;
-  cursor: pointer;
+.custom-filter-select {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #28a745;
+    padding: 8px 16px;
+    border-radius: 8px;
+    height: 40px;
+    font-size: 1rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
+
+/* Стилизация option работает только частично */
+.custom-filter-select option {
+    background-color: #121212; /* тёмный фон */
+    color: #fff;               /* белый текст */
+}
+
+
+.custom-filter-btn {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #28a745;
+    padding: 8px 16px;
+    border-radius: 8px;
+    height: 40px;
+    font-size: 1rem;
+}
+
 
 /* Убираем стандартный фокус Bootstrap */
 .custom-filter-btn:focus,
@@ -25,9 +43,12 @@
   outline: none;
 }
 
-/* Дополнительное выравнивание селекта */
-.custom-filter-select {
-  min-width: 220px;
+.filter-form {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0;
+    border: none;
 }
 
 /* Модальное окно: тёмный зелёный фон, светлый текст */
@@ -106,11 +127,21 @@
   border: 1px solid #1f3b2b;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 255, 102, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  height: 100%;
+  width: auto;
+  height: auto; /* фиксированная высота */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: #f5f5e9;
+}
+.course-card .description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* показывать 3 строки */
+  -webkit-box-orient: vertical;
+  margin-bottom: 10px;
+  min-height: 4.5em; /* для выравнивания, если текста меньше */
 }
 
 .course-card:hover {
@@ -119,19 +150,18 @@
 }
 
 .course-card h2 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   margin-bottom: 10px;
   color: #00ff66;
 }
 
 .course-card p {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #e1ffe1;
-  margin-bottom: 8px;
 }
 
 .course-card img {
-  width: 100%;
+  width: 320px;
   height: 180px; /* Фиксированная высота */
   object-fit: cover; /* Чтобы изображение обрезалось, а не сжималось */
   border-radius: 8px;
@@ -150,7 +180,6 @@
   font-size: 1rem;
   color: #e1ffe1; /* Легкий светлый зеленый для текста */
   line-height: 1.6;
-  margin-bottom: 20px;
 }
 
 /* Секция с информацией */

@@ -130,35 +130,35 @@
                 <div class="nature__text">
                     <h1 class="nature__title">Научись выживать с нами!</h1>
                     
-                    <div class="glowing-images-row">
-                        <div class="glowing-image-container">
-                            <div class="glowing-image">
-                                <img src="{{ asset('img/вода.svg') }}" alt="Добыча воды" class="glowing-image__img">
-                            </div>
-                            <p class="glowing-image__text">Добыча воды и пищи</p>
-                        </div>
-                        
-                        <div class="glowing-image-container">
-                            <div class="glowing-image">
-                                <img src="{{ asset('img/укрытия.svg') }}" alt="Постройка укрытий" class="glowing-image__img">
-                            </div>
-                            <p class="glowing-image__text">Постройка укрытий</p>
-                        </div>
-                        
-                        <div class="glowing-image-container">
-                            <div class="glowing-image">
-                                <img src="{{ asset('img/помощь.svg') }}" alt="Первая помощь" class="glowing-image__img">
-                            </div>
-                            <p class="glowing-image__text">Оказание первой помощи</p>
-                        </div>
-                        
-                        <div class="glowing-image-container">
-                            <div class="glowing-image">
-                                <img src="{{ asset('img/ориентировка.svg') }}" alt="Ориентирование" class="glowing-image__img">
-                            </div>
-                            <p class="glowing-image__text">Ориентирование без гаджетов</p>
-                        </div>
-                    </div>
+<div class="features-grid">
+    <div class="feature-item">
+        <div class="feature-icon">
+            <img src="{{ asset('img/вода.svg') }}" alt="Добыча воды">
+        </div>
+        <p class="feature-text">Добыча воды и пищи</p>
+    </div>
+    
+    <div class="feature-item">
+        <div class="feature-icon">
+            <img src="{{ asset('img/укрытия.svg') }}" alt="Постройка укрытий">
+        </div>
+        <p class="feature-text">Постройка укрытий</p>
+    </div>
+    
+    <div class="feature-item">
+        <div class="feature-icon">
+            <img src="{{ asset('img/помощь.svg') }}" alt="Первая помощь">
+        </div>
+        <p class="feature-text">Оказание первой помощи</p>
+    </div>
+    
+    <div class="feature-item">
+        <div class="feature-icon">
+            <img src="{{ asset('img/ориентировка.svg') }}" alt="Ориентирование">
+        </div>
+        <p class="feature-text">Ориентирование без гаджетов</p>
+    </div>
+</div>
                     
                     <div class="nature__notice">
                         <h3>Снаряжение включено!</h3>

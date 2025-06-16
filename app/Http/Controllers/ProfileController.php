@@ -14,71 +14,86 @@ use App\Models\CourseReview; // ✅ добавлено
 
 class ProfileController extends Controller
 {
-    public function show()
-    {
-        /** @var User $user */
-        $user = Auth::user();
-        
-        if (!$user) {
-            return redirect()->route('login');
-        }
-        
-        $data = ['user' => $user];
-        
-        Course::checkAndCompleteExpiredCourses();
+public function show()
+{
+    /** @var User $user */
+    $user = Auth::user();
     
-        // Для обычных пользователей
-        if ($user->role === 'user') {
-            $completedCourses = $user->courses()
-                ->wherePivot('status', 'completed')
-                ->get();
-            
-            $rejectedCourses = $user->courses()
-                ->wherePivot('status', 'rejected')
-                ->get();
-            
-            // ✅ получаем отзывы пользователя о курсах
-            $courseReviews = CourseReview::where('user_id', $user->id)
-                ->with('course')
-                ->get();
+    if (!$user) {
+        return redirect()->route('login');
+    }
+    
+    $data = ['user' => $user];
+    
+    Course::checkAndCompleteExpiredCourses();
 
-            $data += [
-                'reviews' => Review::where('user_id', $user->id)->get(),
-                'articles' => UserArticle::where('user_id', $user->id)->get(),
-                'completedCourses' => $completedCourses,
-                'coursesInProgress' => $user->courses()
-                    ->wherePivot('status', 'in_progress')
-                    ->get(),
-                'rejectedCourses' => $rejectedCourses,
-                'survivalTestResults' => SurvivalTestResult::where('user_id', $user->id)
-                    ->orderBy('created_at', 'desc')
-                    ->limit(3)
-                    ->get(),
-                'courseReviews' => $courseReviews // ✅ добавлено
-            ];
+    // Для обычных пользователей
+    if ($user->role === 'user') {
+        $completedCourses = $user->courses()
+            ->wherePivot('status', 'completed')
+            ->get();
+        
+        $rejectedCourses = $user->courses()
+            ->wherePivot('status', 'rejected')
+            ->get();
             
-            // Обновление уровня
-            $completedCoursesCount = $completedCourses->count();
-            $newLevel = $this->determineLevel($completedCoursesCount);
-            
-            if ($user->laravel_level !== $newLevel) {
-                $user->update(['laravel_level' => $newLevel]);
-                $user->refresh();
-            }
-        }
+        $courseReviews = CourseReview::where('user_id', $user->id)
+            ->with('course')
+            ->get();
 
-        // Для преподавателей
-        elseif ($user->role === 'teacher') {
-            $data += [
-                'taughtCourses' => $user->taughtCourses()->with('users')->get(),
-                'activeCourses' => $user->taughtCourses()
-                    ->where('end_date', '>', now())
-                    ->get()
-            ];
+        // Проверяем уровень пользователя
+        $isAdvanced = $user->laravel_level === 'Продвинутый';
+        $data['is_advanced'] = $isAdvanced;
+        
+        // Для продвинутых пользователей - загружаем походы на модерацию
+        if ($isAdvanced) {
+            $data['hikes_for_review'] = Trip::where('status', 'pending')
+                ->with('user')
+                ->get();
         }
         
-        return view('profile.show', $data);
+        // Походы текущего пользователя (для всех)
+                $data['user_hikes'] = $user->trips()
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        $data += [
+            'reviews' => Review::where('user_id', $user->id)->get(),
+            'articles' => UserArticle::where('user_id', $user->id)->get(),
+            'completedCourses' => $completedCourses,
+            'coursesInProgress' => $user->courses()
+                ->wherePivot('status', 'in_progress')
+                ->get(),
+            'rejectedCourses' => $rejectedCourses,
+            'survivalTestResults' => SurvivalTestResult::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->limit(3)
+                ->get(),
+            'courseReviews' => $courseReviews
+        ];
+        
+        // Обновление уровня (если изменилось)
+        $completedCoursesCount = $completedCourses->count();
+        $newLevel = $this->determineLevel($completedCoursesCount);
+        
+        if ($user->laravel_level !== $newLevel) {
+            $user->update(['laravel_level' => $newLevel]);
+            $user->refresh();
+        }
     }
+
+    // Для преподавателей
+    elseif ($user->role === 'teacher') {
+        $data += [
+            'taughtCourses' => $user->taughtCourses()->with('users')->get(),
+            'activeCourses' => $user->taughtCourses()
+                ->where('end_date', '>', now())
+                ->get()
+        ];
+    }
+    
+    return view('profile.show', $data);
+}
 
     protected function determineLevel(int $count): string
     {

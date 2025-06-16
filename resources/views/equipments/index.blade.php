@@ -6,14 +6,14 @@
     <div class="row">
         @foreach ($equipment as $item)
             <div class="col-md-4 mb-4">
-                <div class="card">
+                <div class="equipment-card"> <!-- Изменил класс на equipment-card -->
                     @if($item->image_path)
-                        <img src="{{ asset($item->image_path) }}" class="card-img-top" alt="{{ $item->name }}">
+                        <img src="{{ asset($item->image_path) }}" class="equipment-card-img" alt="{{ $item->name }}">
                     @endif
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $item->name }}</h5>
-                        <p class="card-text">{{ $item->description }}</p>
-                        <a href="{{ route('equipment.rent', $item->id) }}" class="btn btn-success">Забронировать</a>
+                    <div class="equipment-card-body">
+                        <h5 class="equipment-card-title">{{ $item->name }}</h5>
+                        <p class="equipment-card-text">{{ $item->description }}</p>
+                        <a href="{{ route('equipment.rent', $item->id) }}" class="btn btn-success equipment-card-btn">Забронировать</a>
                     </div>
                 </div>
             </div>

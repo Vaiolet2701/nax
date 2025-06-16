@@ -16,9 +16,21 @@ class Trip extends Model
         'start_date',
         'end_date',
         'location',
-        'max_participants'
+        'max_participants',
+        'status'
     ];
+const STATUS_PENDING = 'pending';
+const STATUS_APPROVED = 'approved';
+const STATUS_REJECTED = 'rejected';
 
+public static function getStatuses()
+{
+    return [
+        self::STATUS_PENDING => 'На рассмотрении',
+        self::STATUS_APPROVED => 'Одобрено',
+        self::STATUS_REJECTED => 'Отклонено',
+    ];
+}
     // Добавьте это свойство для автоматического преобразования дат
     protected $dates = [
         'start_date',
@@ -26,7 +38,16 @@ class Trip extends Model
         'created_at',
         'updated_at'
     ];
-
+    protected $casts = [
+    'start_date' => 'date',
+    'end_date' => 'date',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+];
+public function getDateAttribute()
+{
+    return $this->start_date; // или другая логика
+}
     public function user()
     {
         return $this->belongsTo(User::class);

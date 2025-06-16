@@ -10,11 +10,12 @@
     <div class="mb-4">
         @if(auth()->user()->role === 'admin')
             <a href="{{ route('admin.articles.create') }}" class="btn btn-primary">Создать статью (админ)</a>
-        @elseif(in_array(auth()->user()->laravel_level, ['Средний']))
+        @elseif(in_array(auth()->user()->laravel_level, ['Средний', 'Продвинутый']))
             <a href="{{ route('articles.create') }}" class="btn btn-primary">Создать статью</a>
         @endif
     </div>
 @endauth
+
     <!-- Фильтр по категориям (только для статей) -->
     <div class="mb-4">
         <label for="categoryFilter">Фильтр по категории:</label>

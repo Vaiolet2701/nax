@@ -4,7 +4,8 @@
     <div class="container">
         <h1>Список статей</h1>
         <a href="{{ route('admin.articles.create') }}" class="btn btn-primary mb-3">Создать статью</a>
-        <table class="table">
+        <div class="admin-table-responsive">
+    <table class="table admin-table">
             <thead>
                 <tr>
                     <th>Название</th>
@@ -14,8 +15,9 @@
             <tbody>
                 @foreach($articles as $article)
                     <tr>
-                        <td>{{ $article->title }}</td>
-                        <td class="d-flex gap-2">
+                        <td data-label="Название">{{ $article->title }}</td>
+                        <td data-label="Действие">
+                                <div class="btn-group">
     <a href="{{ route('admin.articles.edit', $article->id) }}" class="btn btn-sm btn-success">
         Редактировать
     </a>
@@ -30,10 +32,12 @@
         @csrf
         @method('DELETE')
     </form>
+        </div>
 </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>
     </div>
 @endsection

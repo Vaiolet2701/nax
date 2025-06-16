@@ -15,6 +15,7 @@ public function up()
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('course_id')->constrained()->onDelete('cascade');
+        $table->foreignId('original_course_id')->nullable()->constrained('courses')->onDelete('set null');
         $table->string('title');
         $table->text('content');
         $table->unsignedTinyInteger('rating');

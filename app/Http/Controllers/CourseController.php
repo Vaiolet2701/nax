@@ -12,47 +12,57 @@ use Carbon\Carbon;
 
 class CourseController extends Controller
 {
-    public function index(Request $request)
-    {
-        $courses = Course::query();
+public function index(Request $request)
+{
+    $courses = Course::query();
     
-        if ($request->has('start_date') && $request->input('start_date')) {
-            $courses->where('start_date', '>=', $request->input('start_date'));
-        }
-        if ($request->has('end_date') && $request->input('end_date')) {
-            $courses->where('end_date', '<=', $request->input('end_date'));
-        }
-    
-        if ($request->has('min_people') && $request->input('min_people')) {
-            $courses->where('min_people', '>=', $request->input('min_people'));
-        }
-        if ($request->has('max_people') && $request->input('max_people')) {
-            $courses->where('max_people', '<=', $request->input('max_people'));
-        }
-    
-        if ($request->has('category_id') && $request->input('category_id')) {
-            $courses->where('course_category_id', $request->input('category_id'));
-        }
-    
-        if ($request->has('min_price') && $request->input('min_price')) {
-            $courses->where('price', '>=', (float)$request->input('min_price'));
-        }
-        if ($request->has('max_price') && $request->input('max_price')) {
-            $courses->where('price', '<=', (float)$request->input('max_price'));
-        }
-
-        if ($request->sort === 'asc') {
-            $courses->orderBy('title', 'asc');
-        } elseif ($request->sort === 'desc') {
-            $courses->orderBy('title', 'desc');
-        }
-        
-    
-        $courses = $courses->get();
-        $categories = CourseCategory::all();
-    
-        return view('courses.index', compact('courses', 'categories'));
+    // Фильтрация по датам
+    if ($request->has('start_date') && $request->input('start_date')) {
+        $courses->where('start_date', '>=', $request->input('start_date'));
     }
+    if ($request->has('end_date') && $request->input('end_date')) {
+        $courses->where('end_date', '<=', $request->input('end_date'));
+    }
+    
+    // Фильтрация по количеству людей
+    if ($request->has('min_people') && $request->input('min_people')) {
+        $courses->where('min_people', '>=', $request->input('min_people'));
+    }
+    if ($request->has('max_people') && $request->input('max_people')) {
+        $courses->where('max_people', '<=', $request->input('max_people'));
+    }
+    
+    // Фильтрация по категории
+    if ($request->has('category_id') && $request->input('category_id')) {
+        $courses->where('course_category_id', $request->input('category_id'));
+    }
+
+    // Фильтрация по цене
+    if ($request->has('min_price') && $request->input('min_price')) {
+        $courses->where('price', '>=', (float)$request->input('min_price'));
+    }
+    if ($request->has('max_price') && $request->input('max_price')) {
+        $courses->where('price', '<=', (float)$request->input('max_price'));
+    }
+
+    // Логика сортировки
+    if ($request->sort === 'az') {
+        // Сортировка по названию (А–Я)
+        $courses->orderBy('title', 'asc');
+    } elseif ($request->sort === 'za') {
+        // Сортировка по названию (Я–А)
+        $courses->orderBy('title', 'desc');
+    } elseif ($request->sort === 'newest') {
+        // Сортировка по дате начала курса
+        $courses->orderBy('start_date', 'desc');
+    }
+
+    $courses = $courses->get();
+    $categories = CourseCategory::all();
+
+    return view('courses.index', compact('courses', 'categories'));
+}
+
     
 public function show($id)
 {

@@ -5,12 +5,6 @@
     <div class="course-card">
         <h1>{{ $course->title }}</h1>
 
-        @if($course->is_repeated)
-            <div class="alert alert-info">
-                Этот курс повторяется регулярно.
-            </div>
-        @endif
-
         @php
             $now = \Carbon\Carbon::now();
             $start = \Carbon\Carbon::parse($course->start_date);
@@ -18,6 +12,12 @@
             $isOngoing = $now->between($start, $end);
             $isCompleted = $now->gt($end);
         @endphp
+
+        @if($course->is_repeated)
+            <div class="alert alert-info">
+                Этот курс повторяется регулярно.
+            </div>
+        @endif
 
         @if($isCompleted)
             <div class="alert alert-warning">
@@ -75,108 +75,158 @@
                 </div>
             </div>
 
-            <!-- Форма записи на курс -->
-            <div class="col-md-4">
-                <div class="enrollment-card">
-                    <h5>Записаться на курс</h5>
+            <!-- Форма записи на курс (показываем только если курс не завершен) -->
+            @if(!$isCompleted)
+                <div class="col-md-4">
+                    <div class="enrollment-card">
+                        <h5>Записаться на курс</h5>
 
-                    @if($isCompleted || $isOngoing)
-                        <div class="alert alert-secondary">
-                            Запись на данный курс закрыта.
-                        </div>
-                    @else
-                        <form id="enrollmentForm" action="{{ route('courses.enroll', $course) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="course_id" value="{{ $course->id }}">
-                            
-                            @auth
-                                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                            @endauth
-
-                            <!-- Имя -->
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Ваше имя *</label>
-                                <input type="text" class="form-control" id="name" name="name" 
-                                    value="{{ auth()->check() ? auth()->user()->name : '' }}" required>
+                        @if($isOngoing)
+                            <div class="alert alert-secondary">
+                                Запись на данный курс закрыта.
                             </div>
+                        @else
+                            <form id="enrollmentForm" action="{{ route('courses.enroll', $course) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                
+                                @auth
+                                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                                @endauth
 
-                            <!-- Email -->
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Ваш email *</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                    value="{{ auth()->check() ? auth()->user()->email : '' }}" required>
-                            </div>
+                                <!-- Имя -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Ваше имя *</label>
+                                    <input type="text" class="form-control" id="name" name="name" 
+                                        value="{{ auth()->check() ? auth()->user()->name : '' }}" required>
+                                </div>
 
-                            <!-- Телефон -->
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Ваш телефон *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" 
-                                    value="{{ auth()->check() ? (auth()->user()->phone ?? '') : '' }}" required>
-                            </div>
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Ваш email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                        value="{{ auth()->check() ? auth()->user()->email : '' }}" required>
+                                </div>
 
-                            <!-- Возраст -->
-                            <div class="mb-3">
-                                <label for="age" class="form-label">Ваш возраст *</label>
-                                <input type="number" class="form-control" id="age" name="age" 
-                                    value="{{ auth()->check() ? (auth()->user()->age ?? '') : '' }}" 
-                                    min="12" max="100" required>
-                            </div>
+                                <!-- Телефон -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Ваш телефон *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" 
+                                        value="{{ auth()->check() ? (auth()->user()->phone ?? '') : '' }}" required>
+                                </div>
 
-                            <!-- Посещали ли курсы ранее -->
-                            <div class="mb-3">
-                                <label class="form-label">Посещали ли вы наши курсы ранее? *</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="attended_previous_courses" id="attended_yes" value="1">
-                                        <label class="form-check-label" for="attended_yes">Да</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="attended_previous_courses" id="attended_no" value="0" checked>
-                                        <label class="form-check-label" for="attended_no">Нет</label>
+                                <!-- Возраст -->
+                                <div class="mb-3">
+                                    <label for="age" class="form-label">Ваш возраст *</label>
+                                    <input type="number" class="form-control" id="age" name="age" 
+                                        value="{{ auth()->check() ? (auth()->user()->age ?? '') : '' }}" 
+                                        min="12" max="100" required>
+                                </div>
+
+                                <!-- Посещали ли курсы ранее -->
+                                <div class="mb-3">
+                                    <label class="form-label">Посещали ли вы наши курсы ранее? *</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="attended_previous_courses" id="attended_yes" value="1">
+                                            <label class="form-check-label" for="attended_yes">Да</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="attended_previous_courses" id="attended_no" value="0" checked>
+                                            <label class="form-check-label" for="attended_no">Нет</label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Сообщение -->
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Дополнительная информация</label>
-                                <textarea class="form-control" id="message" name="message" rows="3"></textarea>
-                            </div>
-
-                            <!-- Кнопка отправки -->
-                            <button type="submit" class="btn btn-primary w-100">Записаться</button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-
-            <div class="mt-5">
-                @if($course->reviews->count())
-                    <div class="mt-5">
-                        <h2>Отзывы о курсе</h2>
-                        @foreach($course->reviews as $review)
-                            <div class="review-entry mb-3">
-                                <h4>{{ $review->title }}</h4>
-                                <p>{{ Str::limit($review->content, 150) }}</p>
-                                <div class="rating">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <span class="star {{ $i <= $review->rating ? 'filled' : '' }}">★</span>
-                                    @endfor
+                                <!-- Сообщение -->
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Дополнительная информация</label>
+                                    <textarea class="form-control" id="message" name="message" rows="3"></textarea>
                                 </div>
-                                <p class="text-muted">
-                                    Автор: {{ $review->user->name ?? 'Аноним' }}<br>
-                                    Дата: {{ $review->created_at->format('d.m.Y') }}
-                                </p>
-                            </div>
-                        @endforeach
+
+                                <!-- Кнопка отправки -->
+                                <button type="submit" class="btn btn-primary w-100">Записаться</button>
+                            </form>
+                        @endif
                     </div>
+                </div>
+            @endif
+        </div>
+
+        <!-- Отзывы и форма отзыва (если курс завершен) -->
+        <div class="row mt-5">
+            <div class="col-12">
+                @if($course->reviews->count())
+                    <h2>Отзывы о курсе</h2>
+                    @foreach($course->reviews as $review)
+                        <div class="review-entry mb-3">
+                            <h4>{{ $review->title }}</h4>
+                            <p>{{ Str::limit($review->content, 150) }}</p>
+                            <div class="rating">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span class="star {{ $i <= $review->rating ? 'filled' : '' }}">★</span>
+                                @endfor
+                            </div>
+                            <p class="text-muted">
+                                Автор: {{ $review->user->name ?? 'Аноним' }}<br>
+                                Дата: {{ $review->created_at->format('d.m.Y') }}
+                            </p>
+                        </div>
+                    @endforeach
                 @else
-                    <p class="mt-5">Пока нет отзывов о курсе.</p>
+                    <p>Пока нет отзывов о курсе.</p>
                 @endif
+
+                <!-- Форма отзыва (показываем только если курс завершен и пользователь авторизован) -->
+@if($isCompleted)
+    @auth
+        @if($course->canUserReview(auth()->user()))
+            @if(!$course->reviews()->where('user_id', auth()->id())->exists())
+                <div class="mt-5">
+                    <h3>Оставить отзыв</h3>
+                    <form action="{{ route('courses.reviews.store', $course) }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="review_title" class="form-label">Заголовок отзыва *</label>
+                            <input type="text" class="form-control" id="review_title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review_content" class="form-label">Содержание отзыва *</label>
+                            <textarea class="form-control" id="review_content" name="content" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Оценка *</label>
+                            <div class="rating-input">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" {{ $i == 5 ? 'checked' : '' }}>
+                                    <label for="star{{ $i }}">★</label>
+                                @endfor
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                    </form>
+                </div>
+            @else
+                <div class="alert alert-info mt-4">
+                    Вы уже оставили отзыв на этот курс.
+                </div>
+            @endif
+        @else
+            <div class="alert alert-warning mt-4">
+                Вы не можете оставить отзыв, так как не завершили этот курс.
+            </div>
+        @endif
+    @else
+        <div class="alert alert-info mt-4">
+            <a href="{{ route('login') }}">Войдите</a>, чтобы оставить отзыв (только для участников курса).
+        </div>
+    @endauth
+@endif
             </div>
         </div>
     </div>
 </div>
+
 <style>
 .review-entry {
     background-color: #1f1f1f;
@@ -218,7 +268,35 @@
     font-size: 0.875rem;
     color: #999;
 }
+
+.rating-input {
+    display: flex;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+.rating-input input {
+    display: none;
+}
+
+.rating-input label {
+    font-size: 2rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.rating-input input:checked ~ label,
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: #ffc107;
+}
+
+.rating-input input:checked + label:hover,
+.rating-input input:checked ~ label:hover,
+.rating-input label:hover ~ input:checked ~ label,
+.rating-input input:checked ~ label:hover ~ label {
+    color: #ffc107;
+}
 </style>
-
-
 @endsection

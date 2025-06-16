@@ -47,9 +47,7 @@ public function users()
 }
 
 
-public function reviews() {
-    return $this->hasMany(CourseReview::class);
-}
+
 
 public static function checkAndCompleteExpiredCourses()
 {
@@ -110,6 +108,47 @@ public function getHasFutureRepeatAttribute()
 {
     return self::where('parent_course_id', $this->id)
         ->where('start_date', '>', now())
+        ->exists();
+}
+
+public function reviews()
+{
+    // Получаем все отзывы для этого курса
+    $reviews = $this->hasMany(CourseReview::class);
+    
+    // Если есть родительский курс, добавляем его отзывы
+    if ($this->parent_course_id) {
+        $parentReviews = CourseReview::where('original_course_id', $this->parent_course_id)
+            ->orWhere('course_id', $this->parent_course_id);
+            
+        return CourseReview::where('course_id', $this->id)
+            ->union($parentReviews);
+    }
+    
+    // Если это родительский курс, добавляем отзывы всех дочерних курсов
+    if ($this->repeatedCourses()->exists()) {
+        $childReviews = CourseReview::whereIn('course_id', 
+            $this->repeatedCourses()->pluck('id'))
+            ->whereNotNull('original_course_id')
+            ->where('original_course_id', $this->id);
+            
+        return $reviews->union($childReviews);
+    }
+    
+    return $reviews;
+}
+
+public function canUserReview(User $user)
+{
+    // Проверяем, что курс завершен
+    if (!$this->is_completed) {
+        return false;
+    }
+
+    // Проверяем, что пользователь завершил этот курс
+    return $this->users()
+        ->where('user_id', $user->id)
+        ->where('status', 'completed')
         ->exists();
 }
 }

@@ -9,21 +9,32 @@
     @if($equipments->isEmpty())
         <p>Снаряжение отсутствует.</p>
     @else
-        <div class="row">
-            @foreach($equipments as $item)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        @if($item->image_path)
-                            <img src="{{ asset($item->image_path) }}" class="card-img-top" alt="{{ $item->name }}">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->name }}</h5>
-                            <p class="card-text">{{ $item->description }}</p>
-                            <p><strong>Город:</strong> {{ $item->city }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+        <div class="admin-table-responsive">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Город</th>
+                        <th>Изображение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($equipments as $item)
+                        <tr>
+
+                            <td data-label="Название">{{ $item->name }}</td>
+                            <td data-label="Описание">{{ $item->description }}</td>
+                            <td data-label="Город">{{ $item->city }}</td>
+                            <td data-label="Изображение">
+                                @if($item->image_path)
+                                    <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}" width="100">
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     @endif
 </div>

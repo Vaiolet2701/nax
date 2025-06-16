@@ -35,6 +35,8 @@ class EquipmentController extends Controller
         ]);
 
         return redirect()->route('equipments.index')->with('success', 'Заявка на аренду отправлена');
+ 
     }
+    
 }
 

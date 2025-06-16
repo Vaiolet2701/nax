@@ -1,26 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <!-- Верхний блок с фильтрами и сортировкой -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-        <!-- Кнопка открытия модального окна -->
-        <button type="button" class="btn custom-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
-            Открыть фильтры
-        </button>
+    <link href="{{ asset('css/cources.css') }}" rel="stylesheet">
 
-        <!-- Сортировка -->
-        <form action="{{ route('courses.index') }}" method="GET" class="d-flex align-items-center gap-2">
-            @foreach(request()->except('sort') as $key => $value)
-                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-            @endforeach
-            <select name="sort" id="sort" class="form-select custom-filter-select" onchange="this.form.submit()">
-                <option value="">Без сортировки</option>
-                <option value="asc" {{ request('sort') === 'asc' ? 'selected' : '' }}>По названию (А-Я)</option>
-                <option value="desc" {{ request('sort') === 'desc' ? 'selected' : '' }}>По названию (Я-А)</option>
-            </select>
-        </form>
-    </div>
+<div class="container">
+<!-- Верхний блок с фильтрами и сортировкой -->
+<div class="d-flex align-items-center mb-3 flex-wrap gap-3">
+    <!-- Кнопка открытия модального окна -->
+    <button type="button" class="btn custom-filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+        Открыть фильтры
+    </button>
+
+    <!-- Сортировка -->
+<form action="{{ route('courses.index') }}" method="GET" class="filter-form d-flex align-items-center gap-2">
+    @foreach(request()->except('sort') as $key => $value)
+        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+    @endforeach
+    <select name="sort" class="custom-filter-select" onchange="this.form.submit()">
+        <option value="">Без сортировки</option>
+        <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>По названию (А–Я)</option>
+        <option value="za" {{ request('sort') == 'za' ? 'selected' : '' }}>По названию (Я–А)</option>
+        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Сначала новые</option>
+    </select>
+</form>
+
+</div>
+
 
     <!-- Модальное окно фильтров -->
     <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
@@ -96,7 +101,7 @@
                 <a href="{{ route('courses.show', $course->id) }}" class="course-card-link">
                     <div class="course-card">
                         <h2>{{ $course->title }}</h2>
-                        <p>{{ $course->description }}</p>
+                        <p class="description">{{ $course->description }}</p>
                         @if($course->image_path)
                             <img src="{{ asset($course->image_path) }}" alt="{{ $course->title }}">
                         @endif
@@ -128,7 +133,7 @@
                     <a href="{{ route('courses.show', $course->id) }}" class="course-card-link">
                         <div class="course-card">
                             <h2>{{ $course->title }}</h2>
-                            <p>{{ $course->description }}</p>
+                            <p class="description">{{ $course->description }}</p>
                             @if($course->image_path)
                                 <img src="{{ asset($course->image_path) }}" alt="{{ $course->title }}">
                             @endif

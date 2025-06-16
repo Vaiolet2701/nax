@@ -163,44 +163,96 @@ html {
   color: #a2ff7a;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
-
-.glowing-images-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 2rem;
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    justify-items: center;
+    padding: 20px 0;
 }
 
-.glowing-image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.glowing-image {
-  width: 100px;
-  height: 100px;
-  position: relative;
+.feature-icon {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 12px rgba(0, 255, 102, 0.7));
+    transition: all 0.3s ease;
 }
 
-.glowing-image__img {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 4px 12px #00ff66);
-  transition: transform 0.3s ease;
+.feature-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
-.glowing-image__img:hover {
-  transform: scale(1.1);
+.feature-text {
+    font-size: 16px;
+    color: #e1ffe1;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    margin: 0;
+    max-width: 120px;
 }
 
-.glowing-image__text {
-  margin-top: 0.5rem;
-  font-weight: 600;
-  color: #e1ffe1;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+/* Планшеты (2 ряда) */
+@media (max-width: 992px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 25px;
+    }
+    
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .feature-text {
+        font-size: 14px;
+    }
 }
+
+/* Мобильные (2 ряда, уменьшенные) */
+@media (max-width: 576px) {
+    .features-grid {
+        gap: 15px;
+    }
+    
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 8px;
+    }
+    
+    .feature-text {
+        font-size: 12px;
+        max-width: 90px;
+    }
+}
+
+/* Эффекты при наведении */
+.feature-item:hover .feature-icon {
+    filter: drop-shadow(0 0 20px rgba(0, 255, 102, 1));
+}
+
+.feature-item:hover .feature-icon img {
+    transform: scale(1.1);
+}
+
+.feature-item:hover .feature-text {
+    color: #a2ff7a;
+}
+
+
 
 /* Снаряжение включено */
 .nature__notice {
@@ -246,15 +298,7 @@ html {
     font-size: 2rem;
   }
 
-  .glowing-images-row {
-    flex-direction: column;
-    gap: 20px;
-  }
 
-  .glowing-image {
-    width: 80px;
-    height: 80px;
-  }
 }
 
 
@@ -392,7 +436,291 @@ body {
   transform: scale(1);
   z-index: 1;
 }
+.equipment-card {
+  background-color: #14231c;
+  height: 450px; /* Уменьшил высоту */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #1f3b2b;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 350px; /* Ограничил максимальную ширину */
+  margin: 0 auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
 
+.equipment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.equipment-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.equipment-card-body {
+  padding: 0 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.equipment-card-title {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.equipment-card-text {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.equipment-card-btn {
+  width: 80%;
+  margin: 0 auto;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+.trip-card {
+  background-color: #14231c;
+  border-radius: 10px;
+  border: 1px solid #1f3b2b;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.trip-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.trip-card-body {
+  padding: 25px;
+}
+
+.trip-card-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.trip-card-title a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.trip-card-title a:hover {
+  color: #4fd1c5;
+}
+
+.trip-card-text {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.trip-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 15px;
+  border-top: 1px solid #1f3b2b;
+}
+
+.trip-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.trip-card-meta-item {
+  font-size: 0.85rem;
+  color: #8b9e8b;
+}
+
+.trip-card-badge {
+  background-color: #2d3748;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+/* Стили для пагинации */
+.pagination {
+  justify-content: center;
+}
+
+.page-item.active .page-link {
+  background-color: #1f3b2b;
+  border-color: #1f3b2b;
+}
+
+.page-link {
+  color: #4fd1c5;
+}
+
+.page-link:hover {
+  color: #38a89d;
+  background-color: #14231c;
+  border-color: #1f3b2b;
+}
+.trip-detail-card {
+  background-color: #14231c;
+  border-radius: 10px;
+  border: 1px solid #1f3b2b;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.trip-detail-header {
+  padding: 20px;
+  border-bottom: 1px solid #1f3b2b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.trip-detail-title {
+  color: #fff;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.trip-detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.trip-detail-body {
+  padding: 25px;
+}
+
+.trip-detail-section {
+  margin-bottom: 20px;
+}
+
+.trip-detail-label {
+  color: #8b9e8b;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.trip-detail-value {
+  color: #fff;
+  display: block;
+}
+
+.trip-detail-text {
+  color: #ccc;
+  margin-top: 5px;
+  line-height: 1.6;
+}
+
+.trip-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px 20px;
+}
+
+.trip-detail-col {
+  flex: 0 0 50%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.trip-join-form {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #1f3b2b;
+}
+
+.trip-join-title {
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.trip-form-group {
+  margin-bottom: 15px;
+}
+
+.trip-form-label {
+  display: block;
+  color: #8b9e8b;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.trip-form-control {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #1a2a22;
+  border: 1px solid #1f3b2b;
+  border-radius: 5px;
+  color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.trip-form-control:focus {
+  border-color: #4fd1c5;
+  outline: none;
+}
+
+.trip-submit-btn {
+  background-color: #2d3748;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.trip-submit-btn:hover {
+  background-color: #4fd1c5;
+}
+
+@media (max-width: 768px) {
+  .trip-detail-col {
+    flex: 0 0 100%;
+    margin-bottom: 15px;
+  }
+  
+  .trip-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .trip-detail-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+}
 /* Карточка курса */
 .card {
 

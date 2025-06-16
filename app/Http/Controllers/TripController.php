@@ -114,4 +114,15 @@ class TripController extends Controller
     
         return back()->with('success', 'Вы успешно присоединились!');
     }
+    public function approve(Trip $trip)
+{
+    $trip->update(['status' => 'approved']);
+    return back()->with('success', 'Поход успешно одобрен');
+}
+
+public function reject(Trip $trip)
+{
+    $trip->update(['status' => 'rejected']);
+    return back()->with('success', 'Поход отклонен');
+}
 }

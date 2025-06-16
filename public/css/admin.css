@@ -159,3 +159,90 @@ a:hover, a:focus {
     color: #fff !important;
     border-color: #115293 !important;
 }
+
+  /* Адаптивные таблицы для админки */
+.admin-table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767.98px) {
+    .admin-table {
+        width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+    }
+    
+    .admin-table thead {
+        display: none;
+    }
+    
+    .admin-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        background-color: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .admin-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+        border-bottom: 1px solid #444;
+    }
+    
+    .admin-table td:last-child {
+        border-bottom: 0;
+    }
+    
+    .admin-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #81c784;
+        margin-right: 1rem;
+        flex: 0 0 120px;
+    }
+    
+    .admin-table .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .admin-table .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+/* Общие стили для кнопок в таблицах */
+.admin-table .btn-group {
+    display: flex;
+    gap: 0.5rem; /* Добавляем отступ между кнопками */
+    flex-wrap: wrap; /* Перенос на новую строку при нехватке места */
+}
+
+/* Десктопная версия */
+@media (min-width: 768px) {
+    .admin-table .btn-group {
+        gap: 0.75rem; /* Увеличиваем отступ для десктопов */
+    }
+    
+    .admin-table .btn {
+        padding: 0.375rem 0.75rem; /* Стандартные отступы Bootstrap */
+    }
+}
+
+/* Мобильная версия */
+@media (max-width: 767.98px) {
+    .admin-table .btn-group {
+        gap: 0.5rem;
+    }
+    
+    .admin-table .btn {
+        flex: 1 1 auto; /* Гибкое распределение пространства */
+        min-width: 120px; /* Минимальная ширина */
+        margin: 0.25rem 0; /* Отступ сверху и снизу */
+    }
+}

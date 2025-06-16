@@ -153,7 +153,59 @@ body {
     overflow: hidden;
     text-overflow: ellipsis; /* если заголовок длинный, покажет "..." */
 }
+/* Стили для карточек результатов теста */
+.test-result-card {
+    border-left: 5px solid #3498db;
+    transition: transform 0.3s ease;
+}
 
+.test-result-card:hover {
+    transform: translateY(-5px);
+}
+
+.test-result-card .card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.test-result-card .progress {
+    height: 10px;
+    background-color: #2c3e50;
+    border-radius: 5px;
+}
+
+.test-result-card .progress-bar {
+    border-radius: 5px;
+}
+
+/* Стили для формы отзыва */
+.review-form {
+    border: 1px solid #2ecc71;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+    margin-top: 1rem;
+}
+
+.rating-input {
+    display: flex;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+.rating-input input[type="radio"] {
+    display: none;
+}
+
+.rating-input label {
+    font-size: 2rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.rating-input input[type="radio"]:checked ~ label,
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: #f1c40f;
+}
 .card-grid .card p {
     margin: 0;
     flex-grow: 1;

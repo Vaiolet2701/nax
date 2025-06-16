@@ -170,9 +170,14 @@ Route::post('/equipment/{id}/rent', [EquipmentRentalController::class, 'store'])
 Route::get('/equipments', [EquipmentController::class, 'index'])->name('equipments.index');
 // routes/web.php
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
- Route::post('/course-reviews', [CourseReviewController::class, 'store'])->name('course-reviews.store');
-});
-
+// В routes/web.php
+Route::post('/courses/{course}/reviews', [CourseReviewController::class, 'store'])
+    ->name('courses.reviews.store')
+    ->middleware('auth');});
+// Маршрут для сохранения отзывов
+Route::post('/course-reviews', [CourseReviewController::class, 'store'])
+    ->name('course-reviews.store')
+    ->middleware('auth');
 // Публичные маршруты (доступны всем)
 Route::get('/articles', [UserArticleController::class, 'index'])->name('articles.index');
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
@@ -221,7 +226,16 @@ Route::middleware('auth')->group(function () {
     ->name('trips.join')
     ->middleware('auth');
 });
-
+Route::middleware(['auth'])->group(function () {
+    // Для продвинутых пользователей
+    Route::post('/trips/{trip}/approve', [TripController::class, 'approve'])
+        ->name('trips.approve')
+        ->middleware('advanced');
+        
+    Route::post('/trips/{trip}/reject', action: [TripController::class, 'reject'])
+        ->name('trips.reject')
+        ->middleware('advanced');
+});
 Route::prefix('survival-test')->group(function () {
     Route::get('/', [SurvivalTestController::class, 'showTest'])->name('survival.test');
     Route::post('/submit', [SurvivalTestController::class, 'submitTest'])->name('survival.submit');
