@@ -27,64 +27,73 @@
 </div>
 
 
-    <!-- Модальное окно фильтров -->
-    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background-color: #1c2a23; color: #f5f5e9;">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="filterModalLabel">Фильтры курсов</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('courses.index') }}" method="GET" class="filter-form">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="start_date">Период с:</label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="end_date">Период по:</label>
-                                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="min_people">Мин. людей:</label>
-                                <input type="number" name="min_people" id="min_people" class="form-control" value="{{ request('min_people') }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="max_people">Макс. людей:</label>
-                                <input type="number" name="max_people" id="max_people" class="form-control" value="{{ request('max_people') }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="category_id">Категория:</label>
-                                <select name="category_id" id="category_id" class="form-control">
-                                    <option value="">Все категории</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="min_price">Мин. цена:</label>
-                                <input type="number" name="min_price" id="min_price" class="form-control" value="{{ request('min_price') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="max_price">Макс. цена:</label>
-                                <input type="number" name="max_price" id="max_price" class="form-control" value="{{ request('max_price') }}">
-                            </div>
+   <!-- Модальное окно фильтров -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #1c2a23; color: #f5f5e9;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="filterModalLabel">Фильтры курсов</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('courses.index') }}" method="GET" class="filter-form">
+                    <div class="d-flex flex-wrap align-items-end gap-3 mb-4">
+                        <!-- Период -->
+                        <div class="flex-grow-1">
+                            <label for="start_date" class="form-label">Период с:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary">Применить</button>
-                                <a href="{{ route('courses.index') }}" class="btn btn-secondary ms-2">Сбросить</a>
-                            </div>
+                        <div class="flex-grow-1">
+                            <label for="end_date" class="form-label">по:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                         </div>
-                    </form>
-                </div>
+                        
+                        <!-- Количество людей -->
+                        <div class="flex-grow-1">
+                            <label for="min_people" class="form-label">Мин. людей:</label>
+                            <input type="number" name="min_people" id="min_people" class="form-control" value="{{ request('min_people') }}">
+                        </div>
+                        <div class="flex-grow-1">
+                            <label for="max_people" class="form-label">Макс. людей:</label>
+                            <input type="number" name="max_people" id="max_people" class="form-control" value="{{ request('max_people') }}">
+                        </div>
+                        
+                        <!-- Категория -->
+                        <div class="flex-grow-1">
+                            <label for="category_id" class="form-label">Категория:</label>
+                            <select name="category_id" id="category_id" class="form-select">
+                                <option value="">Все категории</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap align-items-end gap-3 mb-4">
+                        <!-- Цена -->
+                        <div class="flex-grow-1">
+                            <label for="min_price" class="form-label">Мин. цена:</label>
+                            <input type="number" name="min_price" id="min_price" class="form-control" value="{{ request('min_price') }}">
+                        </div>
+                        <div class="flex-grow-1">
+                            <label for="max_price" class="form-label">Макс. цена:</label>
+                            <input type="number" name="max_price" id="max_price" class="form-control" value="{{ request('max_price') }}">
+                        </div>
+                        
+                        <!-- Кнопки -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Применить</button>
+                            <a href="{{ route('courses.index') }}" class="btn btn-secondary">Сбросить</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
     <h1 class="text-light">Курсы</h1>
 
