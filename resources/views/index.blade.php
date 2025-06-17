@@ -305,24 +305,19 @@
         </div>
     </div>
 
-    <!-- Форма отзыва -->
-    <form action="{{ route('reviews.store') }}" method="POST" class="reviews-form__form">
-        @csrf
-        <h3 class="reviews-form__title">ОСТАВИТЬ ОТЗЫВ</h3>
-        <div class="form-group">
-            <label for="author_name">Ваше имя:</label>
-            <input type="text" name="author_name" id="author_name" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="content">Текст отзыва:</label>
-            <textarea name="content" id="content" class="form-control" rows="5" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="rating">Рейтинг (от 1 до 5):</label>
-            <input type="number" name="rating" id="rating" class="form-control" min="1" max="5" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
-    </form>
+        <form action="{{ route('reviews.store') }}" method="POST" class="reviews-form__form">
+            @csrf
+            <h3 class="reviews-form__title">ОСТАВИТЬ ОТЗЫВ</h3>
+            <div class="form-group">
+                <label for="content">Текст отзыва:</label>
+                <textarea name="content" id="content" class="form-control" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Рейтинг (от 1 до 5):</label>
+                <input type="number" name="rating" id="rating" class="form-control" min="1" max="5" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+        </form>
 </section>
 
     
@@ -487,7 +482,7 @@ const reviewSwiper = new Swiper('.swiper-container-reviews', {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev',
   },
-  spaceBetween: 30, // ← расстояние между карточками (в пикселях)
+  spaceBetween: 20, // ← расстояние между карточками (в пикселях)
   centeredSlides: true,
 });
 

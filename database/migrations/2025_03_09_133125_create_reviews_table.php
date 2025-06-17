@@ -13,8 +13,7 @@ public function up()
 {
     Schema::create('reviews', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade'); // ← добавлено
-        $table->string('author_name')->nullable()->change();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->text('content');
         $table->tinyInteger('rating')->unsigned();
         $table->timestamps();

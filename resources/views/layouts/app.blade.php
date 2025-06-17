@@ -192,4 +192,139 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     @stack('scripts')
 </body>
+<footer class="survival-footer">
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>Школа выживания</h3>
+      <p>Обучение навыкам выживания в дикой природе с 2023 года</p>
+    </div>
+
+    <div class="footer-section">
+      <h3>Разделы</h3>
+      <ul>
+        <li><a href="/content">Полезное</a></li>
+        <li><a href="/courses">Курсы</a></li>
+        <li><a href="/about">О нас</a></li>
+        <li><a href="/trips">Походы</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Контакты</h3>
+      <ul class="contact-info">
+        <li><i class="fas fa-phone"></i> +7 (986) 720-65-99</li>
+        <li><i class="fas fa-envelope"></i> info@survival-school.ru</li>
+        <li><i class="fas fa-map-marker-alt"></i> г. Казань</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2023 Школа выживания в дикой природе. Все права защищены.</p>
+    <div class="legal-links">
+      <a href="/privacy">Политика конфиденциальности</a>
+      <a href="/terms">Условия использования</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .survival-footer {
+    background-color: #1c2a23;
+    color: #f5f5e9;
+    padding: 40px 0 20px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .footer-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 30px;
+    padding: 0 15px;
+  }
+
+  .footer-section h3 {
+    color: #4fd1c5;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 10px;
+  }
+
+  .footer-section a {
+    color: #c8d5d1;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-section a:hover {
+    color: #4fd1c5;
+  }
+
+  .social-links {
+    margin-top: 20px;
+  }
+
+  .social-links a {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 20px;
+    color: #8b9e8b;
+  }
+
+  .contact-info i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+    color: #4fd1c5;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #2d3e36;
+    padding-top: 20px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+  }
+
+  .legal-links {
+    margin-top: 15px;
+  }
+
+  .legal-links a {
+    margin: 0 10px;
+    color: #8b9e8b;
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    .footer-section {
+      flex: 100%;
+      text-align: center;
+    }
+    
+    .social-links {
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- Подключение иконок Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </html>
