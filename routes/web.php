@@ -249,3 +249,10 @@ Route::prefix('survival-test')->group(function () {
     Route::get('/results/{id}', [SurvivalTestController::class, 'showResults'])->name('survival.result');
 });
 Route::get('/content', [ContentController::class, 'index'])->name('content.index');
+Route::post('/trips/{trip}/approve', [TripController::class, 'approve'])
+     ->name('trips.approve')
+     ->middleware('auth');
+
+Route::post('/trips/{trip}/reject', [TripController::class, 'reject'])
+     ->name('trips.reject')
+     ->middleware('auth');

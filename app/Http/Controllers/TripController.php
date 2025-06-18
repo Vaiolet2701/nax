@@ -78,42 +78,45 @@ class TripController extends Controller
         return redirect()->route('trips.index')->with('success', 'Поход успешно удален!');
     }
 
-    public function join(Request $request, Trip $trip)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'required|integer|min:12|max:100',
-            'phone' => 'required|string|max:20',
-            'notes' => 'nullable|string',
-        ]);
-    
-        $userId = Auth::id(); // Получаем ID текущего пользователя
-    
-        // Проверки
-        if ($userId === $trip->user_id) {
-            return back()->with('error', 'Вы не можете присоединиться к своему походу');
-        }
-    
-        if ($trip->participants()->where('user_id', $userId)->exists()) {
-            return back()->with('error', 'Вы уже участвуете в этом походе');
-        }
-    
-        if ($trip->participants()->count() >= $trip->max_participants) {
-            return back()->with('error', 'Мест больше нет');
-        }
-    
-        // Сохранение в БД
-        $trip->participants()->attach($userId, [
+  public function join(Request $request, Trip $trip)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'age' => 'required|integer|min:12|max:100',
+        'phone' => 'required|string|max:20',
+        'notes' => 'nullable|string',
+    ]);
+
+    $userId = Auth::id();
+
+    // Проверки
+    if ($userId === $trip->user_id) {
+        return back()->with('error', 'Вы не можете присоединиться к своему походу');
+    }
+
+    if ($trip->participants()->where('user_id', $userId)->exists()) {
+        return back()->with('error', 'Вы уже участвуете в этом походе');
+    }
+
+    if ($trip->participants()->count() >= $trip->max_participants) {
+        return back()->with('error', 'Мест больше нет');
+    }
+
+    // Сохранение в БД с использованием syncWithoutDetaching
+    $trip->participants()->syncWithoutDetaching([
+        $userId => [
             'name' => $validated['name'],
             'age' => $validated['age'],
             'phone' => $validated['phone'],
             'notes' => $validated['notes'] ?? null,
+            'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
-    
-        return back()->with('success', 'Вы успешно присоединились!');
-    }
+        ]
+    ]);
+
+    return back()->with('success', 'Вы успешно присоединились!');
+}
     public function approve(Trip $trip)
 {
     $trip->update(['status' => 'approved']);

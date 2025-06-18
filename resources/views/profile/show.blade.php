@@ -337,19 +337,19 @@
                                 <p><strong>Телефон:</strong> {{ $participant->phone }}</p>
                                 <p><strong>Статус:</strong> 
                                     <span class="badge bg-{{ 
-                                        $participant->status === 'approved' ? 'success' : 
-                                        ($participant->status === 'rejected' ? 'danger' : 'warning') 
+                                        $participant->pivot->status === 'approved' ? 'success' : 
+                                        ($participant->pivot->status === 'rejected' ? 'danger' : 'warning') 
                                     }}">
-                                        {{ $participant->status === 'approved' ? 'Одобрено' : 
-                                           ($participant->status === 'rejected' ? 'Отклонено' : 'На рассмотрении') }}
+                                        {{ $participant->pivot->status === 'approved' ? 'Одобрено' : 
+                                           ($participant->pivot->status === 'rejected' ? 'Отклонено' : 'На рассмотрении') }}
                                     </span>
                                 </p>
                             </div>
                         </div>
-                        @if($participant->notes)
+                        @if($participant->pivot->notes)
                             <div class="notes-section mt-2">
                                 <p class="mb-1"><strong>Примечания:</strong></p>
-                                <p class="text-muted small">{{ $participant->notes }}</p>
+                                <p class="text-muted small">{{ $participant->pivot->notes }}</p>
                             </div>
                         @endif
                     </div>
@@ -358,14 +358,14 @@
                 <!-- Кнопки управления -->
                 <div class="card-footer bg-white">
                     <div class="d-flex justify-content-between">
-                        <form action="{{ route('trips.approve', ['hike' => $hike->id, 'participant' => $participant->id]) }}" method="POST">
+                        <form action="{{ route('trips.approve', ['trip' => $hike->id, 'user' => $participant->id]) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-success btn-sm">
                                 <i class="fas fa-check"></i> Одобрить
                             </button>
                         </form>
                         
-                        <form action="{{ route('trips.reject', ['hike' => $hike->id, 'participant' => $participant->id]) }}" method="POST">
+                        <form action="{{ route('trips.reject', ['trip' => $hike->id, 'user' => $participant->id]) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fas fa-times"></i> Отклонить
