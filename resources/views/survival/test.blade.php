@@ -18,7 +18,6 @@
         color: #00ff66;
         font-weight: bold;
         margin-bottom: 2rem;
-        text-shadow: 0 0 5px #00ff66;
         text-align: center;
     }
 

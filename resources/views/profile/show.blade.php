@@ -147,22 +147,11 @@
             <div class="card course-card {{ $index >= 3 ? 'd-none' : '' }}">
                 <h5>{{ $course->title }}</h5>
                 <p>{{ Str::limit($course->description, 100) }}</p>
-                <div class="progress mb-2">
-                    <div class="progress-bar" 
-                         role="progressbar" 
-                         style="width: {{ $course->pivot->progress }}%" 
-                         aria-valuenow="{{ $course->pivot->progress }}" 
-                         aria-valuemin="0" 
-                         aria-valuemax="100">
-                        {{ $course->pivot->progress }}%
-                    </div>
-                </div>
+
                 <p class="text-info">
                     <i class="fas fa-spinner"></i> В процессе
                 </p>
-                <a href="{{ route('courses.show', $course) }}" class="btn btn-sm btn-primary">
-                    Продолжить обучение
-                </a>
+
             </div>
         @endforeach
     </div>
@@ -457,7 +446,149 @@
     </div>
   </div>
 </div>
+<style>
+/* Обновленные стили для карточек */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
 
+.card {
+    background: #252525;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-color: #2ecc71;
+}
+
+.card h4, .card h5 {
+    color: #50fa7b;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.card p {
+    color: #ccc;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.card .badge {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+/* Стили для кнопки "Показать все" */
+.expand-btn {
+    background: none;
+    border: none;
+    color: #50fa7b;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+.expand-btn:hover {
+    background: rgba(80, 250, 123, 0.1);
+    color: #2ecc71;
+    text-decoration: none;
+}
+
+.expand-btn:after {
+    content: '▼';
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.expand-btn.expanded:after {
+    content: '▲';
+}
+
+/* Стили для разных типов карточек */
+.test-result-card {
+    border-left: 4px solid #3498db;
+}
+
+.rejected-course-card {
+    border-left: 4px solid #e74c3c;
+}
+
+.course-card {
+    border-left: 4px solid #9b59b6;
+}
+
+.review-card {
+    border-left: 4px solid #f1c40f;
+}
+
+.article-card {
+    border-left: 4px solid #1abc9c;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик для кнопок "Показать все"
+    document.querySelectorAll('.expand-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const container = document.getElementById(targetId);
+            if (!container) return;
+            
+            const hiddenCards = container.querySelectorAll('.d-none');
+            const isExpanded = this.classList.contains('expanded');
+            
+            if (isExpanded) {
+                // Сворачиваем - скрываем все кроме первых 3/6 карточек
+                const cards = container.querySelectorAll('.card');
+                const showCount = targetId.includes('articlesGrid') || 
+                                 targetId.includes('testResultsGrid') || 
+                                 targetId.includes('pendingCoursesGrid') || 
+                                 targetId.includes('inProgressCoursesGrid') ? 3 : 6;
+                
+                cards.forEach((card, index) => {
+                    if (index >= showCount) {
+                        card.classList.add('d-none');
+                    }
+                });
+                
+                this.classList.remove('expanded');
+                this.textContent = 'Показать все';
+            } else {
+                // Разворачиваем - показываем все карточки
+                hiddenCards.forEach(card => {
+                    card.classList.remove('d-none');
+                });
+                
+                this.classList.add('expanded');
+                this.textContent = 'Свернуть';
+            }
+        });
+    });
+});
+</script>
 @endsection
 
 @push('scripts')
@@ -520,31 +651,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 }
 
-// Обработчик для кнопок "Показать все"
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.expand-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.getAttribute('data-target');
-            const container = document.getElementById(targetId);
-            if (!container) return;
-
-            const hiddenCards = container.querySelectorAll('.d-none');
-            
-            if (hiddenCards.length > 0) {
-                hiddenCards.forEach(card => card.classList.remove('d-none'));
-                button.textContent = 'Свернуть';
-            } else {
-                const showCount = targetId === 'articlesGrid' ? 3 : 
-                                 targetId === 'testResultsGrid' ? 3 : 6;
-                const cards = container.querySelectorAll('.card');
-                cards.forEach((card, index) => {
-                    card.classList.toggle('d-none', index >= showCount);
-                });
-                button.textContent = 'Показать все';
-            }
-        });
-    });
-});
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
