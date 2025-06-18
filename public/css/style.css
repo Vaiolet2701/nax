@@ -16,7 +16,7 @@ html {
 }
 
 body {
-    padding-top: 80px; /* Высота вашей навигации */
+    padding-top: 130px; /* Высота вашей навигации */
 }
 /* === Навигация === */
 .nature__nav {
@@ -315,7 +315,9 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  margin-top: 10px
 }
+
 .section {
   background-color: #0b120f;
   color: #f5f5e9;

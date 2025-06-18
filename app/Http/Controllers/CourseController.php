@@ -125,29 +125,26 @@ public function enroll(Request $request, Course $course)
 public function repeatCourse(Course $course)
 {
     if (!$course->is_repeated) {
-        return redirect()->back()->with('error', 'Этот курс не является повторяющимся');
+        return response()->json(['error' => 'Этот курс не является повторяющимся'], 400);
     }
 
     $newCourse = $course->replicate();
     $newCourse->id = null;
 
     if ($course->start_date) {
-        // Создаём новый объект Carbon для даты старта и добавляем 1 месяц
         $startDate = Carbon::parse($course->start_date)->copy()->addMonth();
         $newCourse->start_date = $startDate->format('Y-m-d');
     }
 
     if ($course->end_date) {
-        // Создаём новый объект Carbon для даты конца и добавляем 1 месяц
         $endDate = Carbon::parse($course->end_date)->copy()->addMonth();
         $newCourse->end_date = $endDate->format('Y-m-d');
     }
 
     $newCourse->parent_course_id = $course->id;
-
     $newCourse->save();
 
-    return redirect()->route('admin.courses.index')->with('success', 'Повтор курса успешно создан');
+    return response()->json(['success' => 'Повтор курса успешно создан']);
 }
 
     public function showMap()

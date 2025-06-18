@@ -134,14 +134,20 @@ Route::post('/admin/courses/{course}/repeat', [CourseController::class, 'repeatC
 
 // ==================== МАРШРУТЫ ДЛЯ ПРЕПОДАВАТЕЛЕЙ ====================
 Route::prefix('teachers')->name('teachers.')->middleware(['auth', 'teacher'])->group(function () {
+    // Основные маршруты
     Route::get('/my-courses', [TeacherController::class, 'myCourses'])->name('my-courses');
     Route::delete('/courses/{course}/leave', [TeacherController::class, 'leaveCourse'])->name('leave-course');
-
-Route::get('/attendance/{courseUser}', [CourseAttendanceController::class, 'showAttendancePage'])->name('attendance');
-    Route::put('/attendance/{courseUser}', [CourseAttendanceController::class, 'updateAttendance'])->name('attendance.update');
-    Route::post('/attendance/issue', [CourseAttendanceController::class, 'submitIssue'])->name('attendance.issue');
+        Route::put('/attendance/{user}', [CourseAttendanceController::class, 'updateAttendance'])
+        ->name('attendance.update');
+            Route::post('/attendance/quick-update', [CourseAttendanceController::class, 'quickUpdate'])
+        ->name('attendance.quick-update');
+    // Маршруты посещаемости (исправленные)
+    Route::get('/attendance/{user}', [CourseAttendanceController::class, 'showAttendancePage'])
+         ->name('attendance');  // Полное имя: teachers.attendance
+    
+    Route::put('/attendance/{user}/update', [CourseAttendanceController::class, 'updateAttendance'])
+         ->name('attendance.update');  // Полное имя: teachers.attendance.update
 });
-
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::post('/courses/invite-teacher', [CourseController::class, 'inviteTeacher'])->name('admin.courses.invite-teacher');

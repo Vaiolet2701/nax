@@ -83,7 +83,6 @@ public function courses()
                 ->withTimestamps();
 }
 
-
     public function pendingCourses()
     {
         return $this->courses()->wherePivot('status', 'pending');
