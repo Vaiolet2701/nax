@@ -69,70 +69,65 @@
         @endif
     </div>
 
-    <!-- Кнопка и блок с остальными заявками -->
-    <button class="btn btn-secondary mb-3" id="toggleEnrollmentsBtn" onclick="toggleAllEnrollments(event)">Показать все заявки</button>
+<!-- Кнопка и блок с остальными заявками -->
+<button class="btn btn-secondary mb-3" id="toggleEnrollmentsBtn" onclick="toggleAllEnrollments()">Показать все заявки</button>
 
-    <div id="allEnrollmentsBlock" style="display: none;">
-        <h2>Все заявки</h2>
-        <div class="admin-table-responsive">
-            @if($allEnrollments->isEmpty())
-                <div class="alert alert-info">Нет заявок</div>
-            @else
-                <table class="table admin-table table-striped table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Пользователь</th>
-                            <th>Курс</th>
-                            <th>Цена</th>
-                            <th>Статус</th>
-                            <th>Телефон</th>
-                            <th>Возраст</th>
-                            <th>Дата</th>
-                            <th>Причина отказа</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($allEnrollments as $enrollment)
-                        <tr class="@if($enrollment->status == 'rejected') table-danger @elseif($enrollment->status == 'in_progress') table-success @endif">
-                            <td data-label="ID">{{ $enrollment->pivot_id }}</td>
-                            <td data-label="Пользователь">{{ $enrollment->name }} ({{ $enrollment->email }})</td>
-                            <td data-label="Курс">{{ $enrollment->title }}</td>
-                            <td data-label="Цена">
-                                @php
-                                    $original = $enrollment->original_price ?? $enrollment->price ?? 0;
-                                    $discounted = $enrollment->discounted_price ?? $original;
-                                @endphp
-                                @if($discounted < $original)
-                                    <span class="text-muted text-decoration-line-through">
-                                        {{ number_format($original, 2) }} руб.
-                                    </span>
-                                    &nbsp;
-                                    <strong>{{ number_format($discounted, 2) }} руб.</strong>
-                                @else
-                                    {{ number_format($original, 2) }} руб.
-                                @endif
-                            </td>
-                            <td data-label="Статус">
-                                @if($enrollment->status == 'pending')
-                                    <span class="badge bg-warning text-dark">Ожидает</span>
-                                @elseif($enrollment->status == 'in_progress')
-                                    <span class="badge bg-success">Принята</span>
-                                @elseif($enrollment->status == 'rejected')
-                                    <span class="badge bg-danger">Отказано</span>
-                                @else
-                                    <span class="badge bg-secondary">Завершена</span>
-                                @endif
-                            </td>
-                            <td data-label="Телефон">{{ $enrollment->phone }}</td>
-                            <td data-label="Возраст">{{ $enrollment->age }}</td>
-                            <td data-label="Дата">{{ \Carbon\Carbon::parse($enrollment->created_at)->format('d.m.Y H:i') }}</td>
-                            <td data-label="Причина отказа">{{ $enrollment->rejection_reason ?? '-' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
+<div id="allEnrollmentsBlock" style="display: none;">
+    <table class="table admin-table table-striped table-hover align-middle">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Пользователь</th>
+            <th>Курс</th>
+            <th>Цена</th>
+            <th>Статус</th>
+            <th>Телефон</th>
+            <th>Возраст</th>
+            <th>Дата</th>
+            <th>Причина отказа</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($allEnrollments as $enrollment)
+        <tr class="enrollment-row">
+            <td data-label="ID">{{ $enrollment->pivot_id }}</td>
+            <td data-label="Пользователь">{{ $enrollment->name }} ({{ $enrollment->email }})</td>
+            <td data-label="Курс">{{ $enrollment->title }}</td>
+            <td data-label="Цена">
+                @php
+                    $original = $enrollment->original_price ?? $enrollment->price ?? 0;
+                    $discounted = $enrollment->discounted_price ?? $original;
+                @endphp
+                @if($discounted < $original)
+                    <span class="text-muted text-decoration-line-through">
+                        {{ number_format($original, 2) }} руб.
+                    </span>
+                    &nbsp;
+                    <strong>{{ number_format($discounted, 2) }} руб.</strong>
+                @else
+                    {{ number_format($original, 2) }} руб.
+                @endif
+            </td>
+            <td data-label="Статус">
+                @if($enrollment->status == 'pending')
+                    <span class="badge bg-warning text-dark">Ожидает</span>
+                @elseif($enrollment->status == 'in_progress')
+                    <span class="badge bg-primary">Принята</span>
+                @elseif($enrollment->status == 'rejected')
+                    <span class="badge bg-secondary">Отказано</span>
+                @else
+                    <span class="badge bg-light text-dark">Завершена</span>
+                @endif
+            </td>
+            <td data-label="Телефон">{{ $enrollment->phone }}</td>
+            <td data-label="Возраст">{{ $enrollment->age }}</td>
+            <td data-label="Дата">{{ \Carbon\Carbon::parse($enrollment->created_at)->format('d.m.Y H:i') }}</td>
+            <td data-label="Причина отказа">{{ $enrollment->rejection_reason ?? '-' }}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+</div>
         </div>
     </div>
 </div>
@@ -178,88 +173,21 @@
         color: #fff;
     }
     
-    /* Адаптивные таблицы */
-    .admin-table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    @media (max-width: 767.98px) {
-        .admin-table {
-            width: 100%;
-            margin-bottom: 1rem;
-            background-color: transparent;
-        }
-        
-        .admin-table thead {
-            display: none;
-        }
-        
-        .admin-table tr {
-            display: block;
-            margin-bottom: 1rem;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 1rem;
-        }
-        
-        .admin-table td {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0.5rem;
-            border-bottom: 1px solid #444;
-        }
-        
-        .admin-table td:last-child {
-            border-bottom: 0;
-        }
-        
-        .admin-table td::before {
-            content: attr(data-label);
-            font-weight: bold;
-            color: #81c784;
-            margin-right: 1rem;
-            flex: 0 0 120px;
-        }
-        
-        .admin-table .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-        
-        .admin-table .btn {
-            flex: 1;
-            min-width: 120px;
-            margin: 0.25rem 0;
-        }
-        
-        .table-danger {
-            background-color: #4a1e1e !important;
-        }
-        
-        .table-success {
-            background-color: #1b3d1b !important;
-        }
-    }
-    
-    @media (min-width: 768px) {
-        .admin-table .btn-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-    }
+
 </style>
 @endsection
 
 @push('scripts')
 <script>
 // Переключение отображения всех заявок и изменение текста кнопки
-function toggleAllEnrollments(event) {
+function toggleAllEnrollments() {
     const block = document.getElementById('allEnrollmentsBlock');
-    const button = event.currentTarget;
+    const button = document.getElementById('toggleEnrollmentsBtn');
+    
+    if (!block || !button) {
+        console.error('Элементы не найдены!');
+        return;
+    }
 
     if (block.style.display === 'none' || block.style.display === '') {
         block.style.display = 'block';

@@ -29,6 +29,14 @@ public function show()
 
     // Для обычных пользователей
     if ($user->role === 'user') {
+        $pendingCourses = $user->courses()
+            ->wherePivot('status', 'pending')
+            ->get();
+            
+        $coursesInProgress = $user->courses()
+            ->wherePivot('status', 'in_progress')
+            ->get();
+            
         $completedCourses = $user->courses()
             ->wherePivot('status', 'completed')
             ->get();
@@ -53,17 +61,16 @@ public function show()
         }
         
         // Походы текущего пользователя (для всех)
-                $data['user_hikes'] = $user->trips()
+        $data['user_hikes'] = $user->trips()
             ->orderBy('start_date', 'desc')
             ->get();
 
         $data += [
             'reviews' => Review::where('user_id', $user->id)->get(),
             'articles' => UserArticle::where('user_id', $user->id)->get(),
+            'pendingCourses' => $pendingCourses,
+            'coursesInProgress' => $coursesInProgress,
             'completedCourses' => $completedCourses,
-            'coursesInProgress' => $user->courses()
-                ->wherePivot('status', 'in_progress')
-                ->get(),
             'rejectedCourses' => $rejectedCourses,
             'survivalTestResults' => SurvivalTestResult::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')

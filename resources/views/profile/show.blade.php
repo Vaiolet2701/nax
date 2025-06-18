@@ -117,7 +117,61 @@
                         Пройти тест выживания
                     </a>
                 </section>
+<!-- Курсы в ожидании -->
+<section class="section-block">
+    <h2>Курсы в ожидании</h2>
+    <div class="card-grid" id="pendingCoursesGrid">
+        @foreach($pendingCourses ?? [] as $index => $course)
+            <div class="card course-card {{ $index >= 3 ? 'd-none' : '' }}">
+                <h5>{{ $course->title }}</h5>
+                <p>{{ Str::limit($course->description, 100) }}</p>
+                <p class="text-warning">
+                    <i class="fas fa-clock"></i> На рассмотрении
+                </p>
+                <p class="text-muted">
+                    Дата подачи: {{ $course->pivot->created_at->format('d.m.Y') }}
+                </p>
+            </div>
+        @endforeach
+    </div>
+    @if(($pendingCourses->count() ?? 0) > 3)
+        <button class="btn btn-link expand-btn" data-target="pendingCoursesGrid">Показать все</button>
+    @endif
+</section>
 
+<!-- Курсы в процессе -->
+<section class="section-block">
+    <h2>Курсы в процессе</h2>
+    <div class="card-grid" id="inProgressCoursesGrid">
+        @foreach($coursesInProgress ?? [] as $index => $course)
+            <div class="card course-card {{ $index >= 3 ? 'd-none' : '' }}">
+                <h5>{{ $course->title }}</h5>
+                <p>{{ Str::limit($course->description, 100) }}</p>
+                <div class="progress mb-2">
+                    <div class="progress-bar" 
+                         role="progressbar" 
+                         style="width: {{ $course->pivot->progress }}%" 
+                         aria-valuenow="{{ $course->pivot->progress }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                        {{ $course->pivot->progress }}%
+                    </div>
+                </div>
+                <p class="text-info">
+                    <i class="fas fa-spinner"></i> В процессе
+                </p>
+                <a href="{{ route('courses.show', $course) }}" class="btn btn-sm btn-primary">
+                    Продолжить обучение
+                </a>
+            </div>
+        @endforeach
+    </div>
+    @if(($coursesInProgress->count() ?? 0) > 3)
+        <button class="btn btn-link expand-btn" data-target="inProgressCoursesGrid">Показать все</button>
+    @endif
+</section>
+
+                    </section>
                 <!-- Завершённые курсы -->
                 <section class="section-block">
                     <h2>Завершённые курсы</h2>
